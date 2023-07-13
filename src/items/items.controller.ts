@@ -1,11 +1,33 @@
+import { ItemStatus } from './item-status.enum';
+import { Item } from './item.model';
 import { ItemsService } from './items.service';
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 @Controller('items')
 export class ItemsController {
-  constructor(private readonly ItemsService: ItemsService) {}
+  constructor(private readonly itemsService: ItemsService) {}
+
   @Get()
   findAll() {
-    return this.ItemsService.findAll();
+    return this.itemsService.findAll();
+  }
+
+  @Post()
+  create(
+    // expressの req.body.idが @Body('id')
+    @Body('id') id: string,
+    @Body('name') name: string,
+    @Body('price') price: number,
+    @Body('description') description: string,
+  ): Item {
+    const item: Item = {
+      id,
+      name,
+      price,
+      description,
+      status: ItemStatus.ON_SALE,
+    };
+
+    return this.itemsService.create(item);
   }
 }
