@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -23,7 +24,11 @@ export class ItemsController {
 
   @Get(':id') //items/:id
   findById(@Param('id', ParseUUIDPipe) id: string): Item {
-    return this.itemsService.findById(id);
+    const found = this.itemsService.findById(id);
+    if (!found) {
+      throw new NotFoundException();
+    }
+    return found;
   }
 
   @Post()
